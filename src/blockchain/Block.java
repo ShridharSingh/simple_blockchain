@@ -32,6 +32,6 @@ public class Block {
     @Override
     public String toString(){
         return "Block [Transactions = " + Arrays.toString(transactions) + ", Previous Block hash = " + previousHash
-                + ", Block hash = " + blockHash + "]";
+                + ", Block hash = " + blockHash + "]\n";
     }
 }

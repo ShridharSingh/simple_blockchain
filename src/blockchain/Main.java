@@ -21,7 +21,7 @@ public class Main {
         System.out.println("\n\nWELCOME to the Blockchain");
         System.out.println("In this demo we will go over what the blockchain looks like, how you can add to the blockchain, and what were to happen if the blockchain was compromised");
 
-        System.out.println("\nPress y to continue...");
+        System.out.println("\nPress any key to continue...");
         Scanner breaks = new Scanner(System.in);
         breaks.next();
 
@@ -38,6 +38,7 @@ public class Main {
         String[] genesisTransactions = {"Satoshi sent Nakamoto 100 bitcoin", "Nakamoto sent 5 bitcoin to Percy"};
         String[] block2_transaction = {"Shridhar received 200 bitcoin from paypal", "Jeff paid Shridhar 30 more bitcoin"};
         String[] block3_transaction = {"Dan paid 2 bitcoin for a car", "Sarah sold her house for 40 bitcoin"};
+
 
         // Existing Blocks
         Block genesisBlock = new Block(0, genesisTransactions);
@@ -90,37 +91,79 @@ public class Main {
         }else if (scanner.nextLine().equalsIgnoreCase("n")){
             return;
         }
-
+        System.out.println("-----------------------------------------------------------");
 
 
         /**
          * Compromised blockchain example
          * **/
 
+        ArrayList properBlockchain = new ArrayList();
+        ArrayList compromisedBlockchain = new ArrayList();
+        properBlockchain.add(genesisBlock);
+        properBlockchain.add(block2);
+        compromisedBlockchain.add(genesisBlock);
+        compromisedBlockchain.add(block2);
+
+
         System.out.println("\n3. Now we look at how the Blockchain reacts to interference");
+        Scanner next = new Scanner(System.in);
+        System.out.println("Press any key to continue...");
+        next.next();
+
         System.out.println("\nExample: 5 bitcoin was sent to Ray by Bill, but Ray got a hold of the code and gave himself 50 bitcoin");
         System.out.println("\nScenario one: Proper transaction");
 
         //Proper transaction
         String[] proper_transaction = {"5 bitcoin was sent to Ray by Bill"};
-        Block properBlock = new Block(0, proper_transaction);
-        blockchain.add(properBlock);
+        Block properBlock = new Block(block2.getBlockHash(), proper_transaction);
+        properBlockchain.add(properBlock);
         System.out.println("\nProper Transaction " + properBlock.toString());
 
         //Compromised transaction
-        System.out.println("\nScenario two: Proper transaction");
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("\nScenario two: Compromised transaction");
         String[] compromised_transaction = {"50 bitcoin was sent to Ray by Bill"};
-        Block compromisedBlock = new Block(0, compromised_transaction);
-        blockchain.add(properBlock);
+        Block compromisedBlock = new Block(block2.getBlockHash(), compromised_transaction);
+        compromisedBlockchain.add(compromisedBlock);
         System.out.println("\nProper Transaction " + compromisedBlock.toString());
 
-        System.out.println("\nNotice how the Block Hash's are different imagine this occurred earlier on in the blockchain, the hash codes will not match up as shown below:");
+        System.out.println("-----------------------------------------------------------");
 
 
-        System.out.println("Original blockchain \t[" + genesisBlock.getBlockHash() +", "+ block2.getBlockHash() +", "+ block3.getBlockHash() + "]");
-        int badhash = block2.getBlockHash() - 15650;
-        System.out.println("Compromised blockchain\t[" + genesisBlock.getBlockHash() +", "+ badhash +", "+ block3.getBlockHash() + "]");
+        System.out.println("\nNotice how the Block Hash's are different imagine this occurred earlier on in the blockchain..." +
+                "\nPress any key to amend the blockchain");
 
+
+        /**Adding new identical transactions to blockchain**/
+        //Transaction 3
+        String[] transaction3 = {"Nakamoto paid 50 bitcoin to Amazon, Lara received 7 bitcoin for her birthday"};
+        Block propertransactionblock3 = new Block(properBlock.getBlockHash(), transaction3);
+        properBlockchain.add(propertransactionblock3);
+        Block compromisedtransactionblock3 = new Block(compromisedBlock.getBlockHash(), transaction3);
+        compromisedBlockchain.add(compromisedtransactionblock3);
+
+        //Transaction 4
+        String[] transaction4 = {"Shivani sold 10 bitcoin to Tony, Max bight a tv for 7 bitcoin"};
+        Block propertransactionblock4 = new Block(propertransactionblock3.getBlockHash(), transaction4);
+        properBlockchain.add(propertransactionblock4);
+        Block compromisedtransactionblock4 = new Block(compromisedtransactionblock3.getBlockHash(), transaction4);
+        compromisedBlockchain.add(compromisedtransactionblock4);
+
+
+        System.out.println("New transactions: \n3. Nakamoto paid 50 bitcoin to Amazon, Lara received 7 bitcoin for her birthday" +
+                "\nShivani sold 10 bitcoin to Tony, Max bight a tv for 7 bitcoin");
+
+
+        System.out.println("-----------------------------------------------------------");
+
+
+        System.out.println("\nOriginal blockchain\t: " + properBlockchain.toString());
+        System.out.println("\nCompromised blockchain\t: " + compromisedBlockchain.toString());
+
+        System.out.println("\n-----------------------------------------------------------");
+        System.out.println("\nEven though the rest of the transactions following the change are exactly the same, the hash codes differ" +
+                "\ntherefore it is not possible to fool a blockchain!!!");
 
     }
 }
